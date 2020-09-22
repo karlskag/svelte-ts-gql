@@ -1,10 +1,27 @@
 <script lang="ts">
-	export let name: string;
+	export let appEngine;
+	import * as core from './core';
+	import { writable } from 'svelte/store';
+	import pageIds from './pageIds';
+
+	import LaunchInfo from './views/LaunchInfo.svelte'
+	import Start from './views/Start.svelte'
+
+	let state = writable(appEngine.stateAtom.deref()); 
+
+	appEngine.render = function () {
+		state.set(appEngine.stateAtom.deref());
+	}
+
+	let idsToComponent = {};
+	idsToComponent[pageIds.start] = Start;
+	idsToComponent[pageIds.latest] = LaunchInfo;
+	const pageComponent = idsToComponent[$state.activePageId];
 </script>
 
 <main>
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
+	<h1>SpaceX launch information</h1>
+	<svelte:component this={pageComponent} state={$state} swapState={appEngine.swapState}/>
 </main>
 
 <style>

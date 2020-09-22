@@ -58,7 +58,9 @@ export default {
 			browser: true,
 			dedupe: ['svelte']
 		}),
-		commonjs(),
+		commonjs({
+			include: /node_modules\/@teamhex\/hexlib\/.+\.js/
+		}),
 		typescript({
 			sourceMap: !production,
 			inlineSources: !production
